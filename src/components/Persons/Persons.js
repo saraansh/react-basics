@@ -16,8 +16,14 @@ class Persons extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     console.log('[Persons.js] shouldComponentUpdate');
     // render the updated component if and only if necessary
-    return true;
+    if (nextProps.persons !== this.props.persons) {
+      return true;
+    } else {
+      return false;
+    }
   }
+
+  /* Class components should extend PureComponent instead of Component if a shouldComponentUpdate check is needed for all the props */
 
   // Update Lifecycle Hook 4 - getSnapshotBeforeUpdate
   getSnapshotBeforeUpdate(prevProps, prevState) {

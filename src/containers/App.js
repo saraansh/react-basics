@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import Auxiliary from '../hoc/Auxiliary';
 
 class App extends React.Component {
   // Create Lifecycle Hook 1 - Constructor
@@ -18,7 +19,8 @@ class App extends React.Component {
     ],
     prevState: {},
     nextState: {},
-    showPersons: false
+    showPersons: false,
+    showCockpit: false
   }
 
   // Create Licfecycle Hook 2 - getDerviedStateFromProps
@@ -85,30 +87,42 @@ class App extends React.Component {
     console.log(this.state);
   }
 
+  toggleCockpitHandler = () => {
+    this.setState({
+      showCockpit: !this.state.showCockpit
+    });
+  }
+
   // Create Lifecycle Hook 3 - render method
   render() {
     console.log('[App.js] render');
     return (
-      <div className="App">
-        <Cockpit
-          showPersons={this.state.showPersons}
-          randomizeAge={this.randomizeAgeHandler}
-          undo={this.undoHandler}
-          redo={this.redoHandler}
-          display={this.showStateHandler}
-          toggle={this.togglePersonsHandler}
-        />
-        <div>
-          {
-            this.state.showPersons ?
-              <Persons
-                persons={this.state.persons}
-                changed={this.nameChangedHandler}
-                clicked={this.deletePersonHandler}
-              /> : null
-          }
-        </div>
-      </div>
+      // A higher order component such as Auxiliary (same as the in-built React.Fragment)
+      // can be used to wrap different kinds of component together as one single component
+      // <div className="App">
+      <Auxiliary>
+        <button onClick={this.toggleCockpitHandler}> Toggle Cockpit </button>
+        {
+          this.state.showCockpit ?
+            <Cockpit
+              showPersons={this.state.showPersons}
+              randomizeAge={this.randomizeAgeHandler}
+              undo={this.undoHandler}
+              redo={this.redoHandler}
+              display={this.showStateHandler}
+              toggle={this.togglePersonsHandler}
+            /> : null
+        }
+        {
+          this.state.showPersons ?
+            <Persons
+              persons={this.state.persons}
+              changed={this.nameChangedHandler}
+              clicked={this.deletePersonHandler}
+            /> : null
+        }
+      </Auxiliary>
+      // </div>
     );
   }
 }
