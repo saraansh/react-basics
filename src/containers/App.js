@@ -4,6 +4,7 @@ import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import Auxiliary from '../hoc/Auxiliary';
 import withClassName from '../hoc/withClassName';
+import AuthContext from '../context/auth-context';
 
 class App extends React.Component {
   // Create Lifecycle Hook 1 - Constructor
@@ -21,7 +22,8 @@ class App extends React.Component {
     prevState: {},
     nextState: {},
     showPersons: false,
-    showCockpit: false
+    showCockpit: false,
+    authenticated: false
   }
 
   // Create Licfecycle Hook 2 - getDerviedStateFromProps
@@ -100,6 +102,12 @@ class App extends React.Component {
     });
   }
 
+  loginHandler = () => {
+    this.setState({
+      authenticated: true
+    });
+  }
+
   // Create Lifecycle Hook 3 - render method
   render() {
     console.log('[App.js] render');
@@ -109,25 +117,32 @@ class App extends React.Component {
       // <div className="App">
       <Auxiliary>
         <button onClick={this.toggleCockpitHandler}> Toggle Cockpit </button>
-        {
-          this.state.showCockpit ?
-            <Cockpit
-              showPersons={this.state.showPersons}
-              randomizeAge={this.randomizeAgeHandler}
-              undo={this.undoHandler}
-              redo={this.redoHandler}
-              display={this.showStateHandler}
-              toggle={this.togglePersonsHandler}
-            /> : null
-        }
-        {
-          this.state.showPersons ?
-            <Persons
-              persons={this.state.persons}
-              changed={this.nameChangedHandler}
-              clicked={this.deletePersonHandler}
-            /> : null
-        }
+        <AuthContext.Provider
+          value={{
+            authenticated: this.state.authenticated,
+            login: this.loginHandler
+          }}
+        >
+          {
+            this.state.showCockpit ?
+              <Cockpit
+                showPersons={this.state.showPersons}
+                randomizeAge={this.randomizeAgeHandler}
+                undo={this.undoHandler}
+                redo={this.redoHandler}
+                display={this.showStateHandler}
+                toggle={this.togglePersonsHandler}
+              /> : null
+          }
+          {
+            this.state.showPersons ?
+              <Persons
+                persons={this.state.persons}
+                changed={this.nameChangedHandler}
+                clicked={this.deletePersonHandler}
+              /> : null
+          }
+        </AuthContext.Provider>
       </Auxiliary>
       // </div>
     );

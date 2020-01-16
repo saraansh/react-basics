@@ -1,18 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import AuthContext from '../../context/auth-context';
 // import classes from './Cockpit.css'; // watch the React styling tutorial to use this
 
 const Cockpit = (props) => {
-    
+    const toggleBtnRef = useRef(null);
     // useEffect lifecycle hook
     useEffect(() => {
         console.log('[Cockpit.js] useEffect 1st');
         // http request or other side effects
-        const timer = setTimeout(() => {
-            alert('Sample alert!');
-        }, 1000);
+        // const timer = setTimeout(() => {
+        //     alert('Sample alert!');
+        // }, 1000);
+        toggleBtnRef.current.click();
         // specify what to do after rendering
         return () => {
-            clearTimeout(timer);
+            // clearTimeout(timer);
             console.log('[Cockpit.js] cleanup work in 1st useEffect')
         }
     }, []);
@@ -37,7 +39,10 @@ const Cockpit = (props) => {
             <button onClick={props.redo}> Redo </button>
             <button onClick={props.display}> Log State </button>
             <br />
-            <button onClick={props.toggle}> Toggle Persons </button>
+            <AuthContext.Consumer>
+                {(context) => <button onClick={context.login}> Login </button>}
+            </AuthContext.Consumer>
+            <button onClick={props.toggle} ref={toggleBtnRef}> Toggle Persons </button>
             {/* <button className={btnClass} onClick={props.toggle}> Toggle Persons </button> */}
             <br />
         </div>
