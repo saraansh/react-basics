@@ -3,6 +3,7 @@ import './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import Auxiliary from '../hoc/Auxiliary';
+import withClassName from '../hoc/withClassName';
 
 class App extends React.Component {
   // Create Lifecycle Hook 1 - Constructor
@@ -35,14 +36,18 @@ class App extends React.Component {
   }
 
   randomizeAgeHandler = () => {
-    this.setState({
-      persons: this.state.persons.map(person => ({ ...person, age: Math.floor(Math.random() * 30) })),
-      prevState: { ...this.state },
-      nextState: {}
+    // this is the proper way of implementing a state update
+    this.setState((prevState, props) => {
+      return {
+        persons: prevState.persons.map(person => ({ ...person, age: Math.floor(Math.random() * 30) })),
+        prevState: { ...prevState },
+        nextState: {}
+      }
     });
   }
 
   nameChangedHandler = (event, id) => {
+    // this method of state change should not be encouraged as state may not be updated instantly by react
     this.setState({
       persons: this.state.persons.map(person => {
         if (person.id === id) {
@@ -63,10 +68,12 @@ class App extends React.Component {
     // slice creates a copy of persons (similar to ...persons)
     const persons = this.state.persons.slice();
     persons.splice(index, 1);
-    this.setState({
-      persons: persons,
-      prevState: { ...this.state },
-      nextState: {}
+    this.setState((prevState, props) => {
+      return {
+        persons: persons,
+        prevState: { ...prevState },
+        nextState: {}
+      }
     });
     console.log('Person deleted!');
   }
@@ -127,4 +134,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withClassName(App, "App");
