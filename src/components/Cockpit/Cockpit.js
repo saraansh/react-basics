@@ -1,9 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import AuthContext from '../../context/auth-context';
 // import classes from './Cockpit.css'; // watch the React styling tutorial to use this
 
 const Cockpit = (props) => {
     const toggleBtnRef = useRef(null);
+    // alternative way of using context in functional components
+    const authContext = useContext(AuthContext);
+
     // useEffect lifecycle hook
     useEffect(() => {
         console.log('[Cockpit.js] useEffect 1st');
@@ -39,9 +42,11 @@ const Cockpit = (props) => {
             <button onClick={props.redo}> Redo </button>
             <button onClick={props.display}> Log State </button>
             <br />
-            <AuthContext.Consumer>
+            {/* <AuthContext.Consumer>
                 {(context) => <button onClick={context.login}> Login </button>}
-            </AuthContext.Consumer>
+            </AuthContext.Consumer> */}
+            {/* See below the alternative way to do use context in functional components */}
+            <button onClick={authContext.login}> Login </button>
             <button onClick={props.toggle} ref={toggleBtnRef}> Toggle Persons </button>
             {/* <button className={btnClass} onClick={props.toggle}> Toggle Persons </button> */}
             <br />

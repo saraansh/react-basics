@@ -11,9 +11,15 @@ class Person extends React.Component {
     this.inputElementRef = React.createRef();
   }
 
+  // alternative (better) way of using context in class components
+  // reserved keywork for context, provides the class with a static context object
+  static contextType = AuthContext;
+
   componentDidMount() {
     // this.inputElement.focus()
     this.inputElementRef.current.focus();
+    // context variable provided by React with contextType intialization
+    console.log(this.context.authenticated);
   }
 
   render() {
@@ -21,13 +27,19 @@ class Person extends React.Component {
     return (
       // using a higher order class instead of div to achieve similar results
       <WithClass classes="Person App-header">
-        <AuthContext.Consumer>
+        {/* <AuthContext.Consumer>
           {(context) => context.authenticated ?
             <p onClick={this.props.click}> I'm {this.props.name} and my age is {this.props.age}! </p>
             :
             <p> Please authenticate to view the info! </p>
           }
-        </AuthContext.Consumer>
+        </AuthContext.Consumer> */}
+        { // alternative way to use context in class based components
+          this.context.authenticated ?
+            <p onClick = {this.props.click}> I 'm {this.props.name} and my age is {this.props.age}! </p>
+            :
+            <p> Please authenticate to view the info! </p>
+        }
         <p> {this.props.children} </p>
         <input
           // ref={(inputEl) => {this.inputElement = inputEl}}
